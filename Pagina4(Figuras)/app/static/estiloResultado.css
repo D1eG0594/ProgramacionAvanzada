@@ -1,0 +1,14 @@
+body{
+    background-color: blueviolet;
+    font-family: Courier New;
+    text-align: center;
+}
+
+h1{
+    color: aquamarine;
+}
+
+p{
+    font-weight: bolder;
+    font-size: x-large;
+}
