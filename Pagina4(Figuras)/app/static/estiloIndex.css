@@ -1,0 +1,72 @@
+.datos{
+    text-align: center;
+}
+
+.titulos{
+  text-align: center;
+}
+
+.figura-selector {
+  visibility: hidden;
+}
+
+/* Estilo para el contenedor de cada figura */
+.figura-container {
+  display: inline-block;
+  margin-right: 20px;
+  cursor: pointer;
+  margin-left: 48%;
+  margin-top: 30px;
+}
+
+/* Estilo para el cuadrado */
+.cuadrado-label {
+  width: 100px;
+  height: 100px;
+  background-color: #007bff;
+  display: block;
+  text-align: center;
+  line-height: 100px;
+  color: white;
+}
+
+/* Estilo para el círculo */
+.circulo-label {
+  width: 100px;
+  height: 100px;
+  background-color: #28a745;
+  display: block;
+  text-align: center;
+  line-height: 100px;
+  color: white;
+  border-radius: 50%;
+}
+
+/* Estilo para el triángulo */
+.triangulo-label {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 100px solid #dc3545;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 16px;
+}
+/* Estilo para resaltar el elemento seleccionado */
+.figura-container:hover {
+  background-color: lightgray;
+}
+
+/* Estilo para resaltar el elemento seleccionado */
+.figura-selector:checked + label {
+  background-color: lightgray;
+}
+
+.boton{
+  margin-left: 50%;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
