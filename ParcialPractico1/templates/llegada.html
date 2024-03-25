@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{{ url_for('static', filename='estiloLlegada.css') }}" rel="stylesheet" type="text/css">
+    <title>Rutina del usuario</title>
+</head>
+<body>
+    <h1>Información del Cliente y Rutina</h1>
+    <p>Nombre: {{ usuario.nombre }}</p>
+    <p>Fecha de Nacimiento: {{ usuario.fecha_nacimiento }}</p>
+    <p>Peso: {{ usuario.peso }}</p>
+    <p>Altura: {{ usuario.altura }}</p>
+    <p>Objetivo: {{ usuario.objetivo }}</p>
+    <p>Condiciones Médicas: {{ usuario.condiciones_medicas }}</p>
+    <h2>Rutina Asignada:</h2>
+    <ul>
+        {% for ejercicio, duracion in rutina %}
+            <li>{{ ejercicio }} - {{ duracion }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
