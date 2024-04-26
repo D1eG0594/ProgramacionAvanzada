@@ -2,21 +2,15 @@ import os
 from flask import Flask, render_template, request
 from objetos import Cliente
 import psycopg2
+import sqlite3
 
 app = Flask(__name__)
 
-def conectar_db():
-    return psycopg2.connect(
-        host=os.getenv("localhost"),
-        database=os.getenv("Usuarios"),
-        user=os.getenv("Admin"),
-        password=os.getenv("1234")
-    )
 
 def crear_tabla_usuarios(conn):
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios (
-                        id SERIAL PRIMARY KEY,
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
                         nombre TEXT,
                         telefono TEXT,
                         email TEXT,
@@ -31,8 +25,8 @@ def crear_tabla_usuarios(conn):
 def insertar_usuario(conn, usuario):
     cursor = conn.cursor()
     cursor.execute('''INSERT INTO usuarios (nombre, telefono, email, fecha_nacimiento, peso, altura, objetivo, condiciones_medicas)
-                      VALUES (%s, %s, %s, %s, %s, %s, %s, %s)''',
-                   (usuario.nombre, usuario.telefono, usuario.email, usuario.fecha_nacimiento, usuario.peso, usuario.altura, usuario.objetivo, usuario.condiciones_medicas))
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                  (usuario.nombre, usuario.telefono, usuario.email, usuario.fecha_nacimiento, usuario.peso, usuario.altura, usuario.objetivo, usuario.condiciones_medicas))
     conn.commit()
 
 @app.route("/")
@@ -54,19 +48,17 @@ def rutina():
 
     rutina_asignada = usuario.asignar_rutina()
 
-    try:
-        conn = conectar_db()
-        cursor = conn.cursor()
-        crear_tabla_usuarios(conn)
-        insertar_usuario(conn, usuario)
-        cursor.execute("SELECT * FROM usuarios")
-        rows = cursor.fetchall()
-        for row in rows:
-            print(row)
-        conn.close()
-    except psycopg2.OperationalError as e:
-        # Manejar error de conexión o consulta
-        print("Error de conexión o consulta:", e)
+
+    conn = sqlite3.connect('usuarios.sqlite')
+    cursor = conn.cursor()
+    crear_tabla_usuarios(conn)
+    insertar_usuario(conn, usuario)
+    cursor.execute("SELECT * FROM usuarios")
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)
+    conn.close()
+    
 
     return render_template("llegada.html", usuario=usuario, rutina=rutina_asignada)
 
