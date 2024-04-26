@@ -1,7 +1,5 @@
-import os
 from flask import Flask, render_template, request
 from objetos import Cliente
-import psycopg2
 import sqlite3
 
 app = Flask(__name__)
