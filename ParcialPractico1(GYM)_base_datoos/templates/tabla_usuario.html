@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .editable {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Usuarios</h1>
+    <table id="usuarios-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Telefono</th>
+                <th>Email</th>
+                <!-- Agregar más columnas según tus necesidades -->
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos de los usuarios se cargarán aquí mediante JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Cargar los usuarios cuando la página se carga
+        $(document).ready(function() {
+            cargarUsuarios();
+        });
+
+        // Función para cargar los usuarios desde el servidor
+        function cargarUsuarios() {
+            $.get('/api/usuarios', function(data) {
+                console.log(data);
+                var usuarios = data.usuarios;
+                var tabla = $('#usuarios-table tbody');
+                tabla.empty();
+                usuarios.forEach(function(usuario) {
+                    console.log(usuario[0])
+                    var fila = '<tr>';
+                    fila += '<td>' + usuario[0] + '</td>';
+                    fila += '<td class="editable" data-column="nombre" id="' + usuario[0] + '">' + usuario[1] + '</td>';
+                    fila += '<td class="editable" data-column="telefono" id="' + usuario[0] + '">' + usuario[2] + '</td>';
+                    fila += '<td class="editable" data-column="email" id="' + usuario[0] + '">' + usuario[3] + '</td>';
+                    // Agregar más celdas según tus necesidades
+                    fila += '<td><button onclick="guardarCambios(' + usuario[0] + ')">Guardar</button></td>';
+                    fila += '</tr>';
+                    tabla.append(fila);
+                });
+            });
+        }
+
+        // Función para guardar los cambios realizados por el usuario
+        function guardarCambios(usuarioId) {
+            var fila = $('#usuarios-table tbody tr').filter(function() {
+                return $(this).find('td').data('id') == usuarioId;
+            });
+            var data = {
+                id: usuarioId
+            };
+            fila.find('.editable').each(function() {
+                var columna = $(this).data('column');
+                var valor = $(this).text();
+                data[columna] = valor;
+            });
+
+            // Enviar los datos al servidor para guardarlos
+            $.post('/api/editar_usuario/' + usuarioId, data, function(response) {
+                console.log(response);
+                // Opcional: Actualizar la tabla después de guardar los cambios
+                cargarUsuarios();
+            });
+        }
+    </script>
+</body>
+</html>
